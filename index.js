@@ -6,6 +6,8 @@ morgan.token('type', function (req, res) { return JSON.stringify(req.body) })
 const app = express()
 //express json parser used to parse incoming data (POST to add person)
 app.use(express.json())
+//serve the static frontend build
+app.use(express.static('build'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :type'))
 app.use(cors())
 let persons = [
