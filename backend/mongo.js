@@ -1,3 +1,4 @@
+//Testing out mongoose etc before implementing in index.js
 const mongoose = require('mongoose')
 
 if (process.argv.length<3) {

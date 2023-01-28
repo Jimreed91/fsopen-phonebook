@@ -1,3 +1,4 @@
+require('dotenv').config()
 const { response } = require('express')
 const express = require('express')
 const morgan = require('morgan')
@@ -10,30 +11,11 @@ app.use(express.json())
 app.use(express.static('build'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :type'))
 app.use(cors())
-//Mongo setup
-const mongoose = require('mongoose')
-
-const password = "mhXhjIqQGHnKjGZ7"
-const url =
-`mongodb+srv://jimreed91:${password}@cluster0.kyqu9pk.mongodb.net/?retryWrites=true&w=majority`
-
-mongoose.set('strictQuery',false)
-mongoose.connect(url)
-
-const personSchema = new mongoose.Schema({
-  name: String,
-  number: String
-}, {versionKey: false })
-
-personSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()
-    delete returnedObject._id
-    delete returnedObject.__v
-  }
+const PORT = process.env.PORT
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
 })
-
-const Person = mongoose.model('Person', personSchema)
+const Person = require('./models/person')
 // let persons = [
 //   {
 //     "id": 1,
@@ -89,8 +71,6 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 app.post('/api/persons', (request, response) => {
-  //following the exercise not sure why id being implemented like this
-  const id = Math.floor(Math.random() * 999)
   const body = request.body
   if(!body) {
     return response.status(400).json({
@@ -109,17 +89,14 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  if(persons.some(person => person.name === body.name)) {
-    return response.status(400).json({
-      error: 'contact name already exists'
+    const person = new Person({
+      name: body.name,
+      number: body.number
     })
-  }
-    const person = request.body
-    person.id = id
 
-    persons = persons.concat(person)
-    response.json(person)
-
+    person.save().then(savedNote => {
+      response.json(savedNote)
+    })
 })
 
 const unknownEndpoint = (request, response) => {
@@ -127,8 +104,3 @@ const unknownEndpoint = (request, response) => {
 }
 
 app.use(unknownEndpoint)
-
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
