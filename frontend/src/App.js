@@ -27,7 +27,6 @@ const App = () => {
   : persons.filter(person => person.name.toLowerCase().includes(showAll.toLowerCase()))
 
   const handleNewName = (event) => {
-    console.log(event.target.value)
     setNewName(event.target.value)
   }
 
@@ -41,7 +40,7 @@ const App = () => {
       personsService
         .destroy(id)
         .then( response =>
-          setPersons(persons.filter(person => person.id != id))
+          setPersons(persons.filter(person => person.id !== id))
         )
    }
   }
@@ -53,30 +52,26 @@ const App = () => {
       number: newNumber
     }
     const person = persons.find(person => person.name === newName)
-
     if (typeof person === 'undefined') {
+
       personsService
         .create(personObject)
         .then(returnedPerson => setPersons(persons.concat(returnedPerson)))
-        setNewName("")
-        setNewNumber("")
+
         setErrorMessage(`Person ${personObject.name} added`)
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
-        .catch(error => {
-          setErrorMessage(`Something went wrong`)
-          setTimeout(() => {
-            setErrorMessage(null)
-          }, 5000)
-        })
     } else {
 
-      if (window.confirm(`${person} is already saved, update their number?`)){
+      if (window.confirm(`${person.name} is already saved, update their number?`)){
         const updatedPerson = {...person, number: newNumber}
+        setNewName("")
+        setNewNumber("")
         personsService
           .update(person.id, updatedPerson)
           .then(response => {
+
             setPersons(persons.map(p => p.id !== response.id ? p : response ))
             setErrorMessage(`Person ${updatedPerson.name} updated`)
             setTimeout(() => {
@@ -104,6 +99,8 @@ const App = () => {
 
       <PersonForm
         handleNewName={handleNewName}
+        newName={newName}
+        newNumber={newNumber}
         handleNewNumber={handleNewNumber}
         addName={addName}
       />
