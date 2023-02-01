@@ -1,5 +1,5 @@
 # fsopen-phonebook
-This project is a work in progress, just getting started on it
-live version can be found here ->
+This project is a work in progress, 
+live version is available here ->
 https://fsopen-phbook.onrender.com
 
