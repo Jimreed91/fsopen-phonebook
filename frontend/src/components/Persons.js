@@ -5,6 +5,7 @@ const Persons = ({personsToShow, handleDelete}) => {
     {personsToShow.map((person) =>
       <div key={person.id}>
         <p>{person.name}: {person.number}</p>
+        <p>ID-{person.id}</p>
         <button onClick={handleDelete} value={person.id}>Delete</button>
       </div>
     )}
