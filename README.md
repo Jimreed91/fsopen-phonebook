@@ -1,5 +1,5 @@
 # fsopen-phonebook
-This project is a work in progress,
+This project is a work in progress and backend focussed, all about the data not the looks. Don't enter personal information as it will be persisted in the database until someone deletes it!
 live version is available here ->
 https://fsopen-phbook.onrender.com
 
